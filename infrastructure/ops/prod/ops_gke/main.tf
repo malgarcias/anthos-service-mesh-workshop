@@ -1,8 +1,6 @@
 # gke-asm-1-r1-prod - Create GKE regional cluster in ops-asm project using subnet-01
 module "create_gke_1_ops_asm_subnet_01" {
-  source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "5.1.1"
-
+  source             = "github.com/terraform-google-modules/terraform-google-kubernetes-engine//modules/beta-public-cluster?ref=v5.1.1"
   project_id         = data.terraform_remote_state.ops_project.outputs.ops_project_id
   name               = var.gke_asm_r1
   kubernetes_version = var.kubernetes_version
@@ -14,8 +12,14 @@ module "create_gke_1_ops_asm_subnet_01" {
   ip_range_pods      = var.subnet_01_secondary_pod_name
   ip_range_services  = var.subnet_01_secondary_svc_1_name
   network_policy     = true
+  node_metadata      = "GKE_METADATA_SERVER"
+  identity_namespace = "${data.terraform_remote_state.ops_project.outputs.ops_project_id}.svc.id.goog"
   monitoring_service = "monitoring.googleapis.com/kubernetes"
   logging_service    = "logging.googleapis.com/kubernetes"
+
+  pod_security_policy_config = [{
+    enabled = true
+  }]
 
   node_pools = [
     {
@@ -44,9 +48,7 @@ module "create_gke_1_ops_asm_subnet_01" {
 
 # gke-asm-2-r2-prod - Create GKE regional cluster in ops-asm project using subnet-02
 module "create_gke_2_ops_asm_subnet_02" {
-  source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "5.1.1"
-
+  source             = "github.com/terraform-google-modules/terraform-google-kubernetes-engine//modules/beta-public-cluster?ref=v5.1.1"
   project_id         = data.terraform_remote_state.ops_project.outputs.ops_project_id
   name               = var.gke_asm_r2
   kubernetes_version = var.kubernetes_version
@@ -58,8 +60,14 @@ module "create_gke_2_ops_asm_subnet_02" {
   ip_range_pods      = var.subnet_02_secondary_pod_name
   ip_range_services  = var.subnet_02_secondary_svc_1_name
   network_policy     = true
+  node_metadata      = "GKE_METADATA_SERVER"
+  identity_namespace = "${data.terraform_remote_state.ops_project.outputs.ops_project_id}.svc.id.goog"
   monitoring_service = "monitoring.googleapis.com/kubernetes"
   logging_service    = "logging.googleapis.com/kubernetes"
+
+  pod_security_policy_config = [{
+    enabled = true
+  }]
 
   node_pools = [
     {

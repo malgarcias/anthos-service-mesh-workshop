@@ -1,8 +1,6 @@
 # gke-3-apps-r2a-prod - Create GKE zonal cluster in dev2 project using subnet-04 zone a
 module "create_gke_3_dev2_r2a_subnet_04" {
-  source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "5.1.1"
-
+  source             = "github.com/terraform-google-modules/terraform-google-kubernetes-engine//modules/beta-public-cluster?ref=v5.1.1"
   project_id         = data.terraform_remote_state.app2_project.outputs.dev2_project_id
   name               = var.gke_dev2-r2a
   kubernetes_version = var.kubernetes_version
@@ -15,8 +13,14 @@ module "create_gke_3_dev2_r2a_subnet_04" {
   ip_range_pods      = var.subnet_04_secondary_pod_name
   ip_range_services  = var.subnet_04_secondary_svc_1_name
   network_policy     = true
+  node_metadata      = "GKE_METADATA_SERVER"
+  identity_namespace = "${data.terraform_remote_state.app2_project.outputs.dev2_project_id}.svc.id.goog"
   monitoring_service = "monitoring.googleapis.com/kubernetes"
   logging_service    = "logging.googleapis.com/kubernetes"
+
+  pod_security_policy_config = [{
+    enabled = true
+  }]
 
   node_pools = [
     {
@@ -46,9 +50,7 @@ module "create_gke_3_dev2_r2a_subnet_04" {
 
 # gke-4-apps-r2b-prod - Create GKE zonal cluster in dev2 project using subnet-04 zone b
 module "create_gke_4_dev2_r2b_subnet_04" {
-  source  = "terraform-google-modules/kubernetes-engine/google"
-  version = "5.1.1"
-
+  source             = "github.com/terraform-google-modules/terraform-google-kubernetes-engine//modules/beta-public-cluster?ref=v5.1.1"
   project_id         = data.terraform_remote_state.app2_project.outputs.dev2_project_id
   name               = var.gke_dev2-r2b
   kubernetes_version = var.kubernetes_version
@@ -61,8 +63,14 @@ module "create_gke_4_dev2_r2b_subnet_04" {
   ip_range_pods      = var.subnet_04_secondary_pod_name
   ip_range_services  = var.subnet_04_secondary_svc_2_name
   network_policy     = true
+  node_metadata      = "GKE_METADATA_SERVER"
+  identity_namespace = "${data.terraform_remote_state.app2_project.outputs.dev2_project_id}.svc.id.goog"
   monitoring_service = "monitoring.googleapis.com/kubernetes"
   logging_service    = "logging.googleapis.com/kubernetes"
+
+  pod_security_policy_config = [{
+    enabled = true
+  }]
 
   node_pools = [
     {
