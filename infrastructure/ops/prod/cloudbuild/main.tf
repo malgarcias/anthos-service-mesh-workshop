@@ -1,6 +1,6 @@
 # Create CSR repo for k8s manifests
 resource "google_sourcerepo_repository" "k8s_repo" {
-  name = var.k8s_repo_name
+  name    = var.k8s_repo_name
   project = data.terraform_remote_state.ops_project.outputs.ops_project_id
 }
 

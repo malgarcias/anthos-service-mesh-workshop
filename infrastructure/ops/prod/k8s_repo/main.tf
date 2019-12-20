@@ -58,9 +58,9 @@ resource "null_resource" "exec_create_k8s_repo" {
 resource "null_resource" "exec_initial_commit_k8s_repo" {
   provisioner "local-exec" {
     interpreter = ["bash", "-exc"]
-    command = local.initial_commit_script
+    command     = local.initial_commit_script
   }
-  depends_on=[null_resource.exec_create_k8s_repo,]
+  depends_on = [null_resource.exec_create_k8s_repo, ]
 
   triggers = {
     script        = local.initial_commit_script
