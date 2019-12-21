@@ -3,8 +3,7 @@ locals {
   # This will be added to the cloudbuild repo for the project.
   istio_operator_download_script = <<EOT
 wget -qO- https://github.com/istio/operator/archive/${var.istio_version}.tar.gz | tar -zxf - operator-${var.istio_version}/deploy
-kubectl kustomize operator-${var.istio_version}/deploy > istio-operator-${var.istio_version}.yaml
-gsutil -m cp istio-operator-${var.istio_version}.yaml gs://${var.tfadmin_proj}/ops/istio-operator-${var.istio_version}.yaml
+gsutil -m cp -r operator-${var.istio_version}/deploy gs://${var.tfadmin_proj}/ops/istio-operator-${var.istio_version}
   EOT
 
   # Create certs - This script creates a new certs folder in the current folder and creates the fout required certs for Istio multicluster setup

@@ -146,3 +146,51 @@ resource "null_resource" "exec_gke_clusteradmin_ops" {
     google_project_iam_member.ops_cloudbuild_sa_gke_admin_in_ops_project,
   ]
 }
+
+resource "google_compute_address" "gke_1_ops_istio_policy_ilb" {
+  project      = data.terraform_remote_state.shared_vpc.outputs.svpc_host_project_id
+  name         = "${var.gke_asm_r1}-istio-policy-ilb"
+  subnetwork   = var.subnet_01_name
+  address_type = "INTERNAL"
+  region       = var.subnet_01_region
+}
+
+resource "google_compute_address" "gke_2_ops_istio_policy_ilb" {
+  project      = data.terraform_remote_state.shared_vpc.outputs.svpc_host_project_id
+  name         = "${var.gke_asm_r2}-istio-policy-ilb"
+  subnetwork   = var.subnet_02_name
+  address_type = "INTERNAL"
+  region       = var.subnet_02_region
+}
+
+resource "google_compute_address" "gke_1_ops_istio_telemetry_ilb" {
+  project      = data.terraform_remote_state.shared_vpc.outputs.svpc_host_project_id
+  name         = "${var.gke_asm_r1}-istio-telemetry-ilb"
+  subnetwork   = var.subnet_01_name
+  address_type = "INTERNAL"
+  region       = var.subnet_01_region
+}
+
+resource "google_compute_address" "gke_2_ops_istio_telemetry_ilb" {
+  project      = data.terraform_remote_state.shared_vpc.outputs.svpc_host_project_id
+  name         = "${var.gke_asm_r2}-istio-telemetry-ilb"
+  subnetwork   = var.subnet_02_name
+  address_type = "INTERNAL"
+  region       = var.subnet_02_region
+}
+
+resource "google_compute_address" "gke_1_ops_istio_pilot_ilb" {
+  project      = data.terraform_remote_state.shared_vpc.outputs.svpc_host_project_id
+  name         = "${var.gke_asm_r1}-istio-pilot-ilb"
+  subnetwork   = var.subnet_01_name
+  address_type = "INTERNAL"
+  region       = var.subnet_01_region
+}
+
+resource "google_compute_address" "gke_2_ops_istio_pilot_ilb" {
+  project      = data.terraform_remote_state.shared_vpc.outputs.svpc_host_project_id
+  name         = "${var.gke_asm_r2}-istio-pilot-ilb"
+  subnetwork   = var.subnet_02_name
+  address_type = "INTERNAL"
+  region       = var.subnet_02_region
+}

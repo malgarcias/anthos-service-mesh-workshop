@@ -1,78 +1,85 @@
 steps:
+  - name: gcr.io/cloud-builders/git
+    id: clone-cloud-builders-community
+    args:
+      - "clone"
+      - "https://github.com/GoogleCloudPlatform/cloud-builders-community"
+  - name: "gcr.io/kaniko-project/executor:latest"
+    id: "build-kustomize-image"
+    dir: /workspace/cloud-builders-community/kustomize
+    args:
+      - --destination=gcr.io/${ops_project_id}/kustomize:latest
+      - --cache=true
+      - --cache-ttl=36h
+      - --context=/workspace/cloud-builders-community/kustomize
   # This step deploys the manifests to the gke-asm-1-r1-prod cluster
-  - name: "gcr.io/cloud-builders/kubectl"
+  - name: "gcr.io/${ops_project_id}/kustomize"
     id: Deploy-ops-asm-1
     args:
-      - "apply"
-      - "-R"
-      - "-f"
+      - "build"
       - "./gke-asm-1-r1-prod"
     env:
+      - "APPLY=true"
       - "CLOUDSDK_CORE_PROJECT=${ops_project_id}"
       - "CLOUDSDK_COMPUTE_REGION=${ops_gke_1_location}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${ops_gke_1_name}"
 
   # This step deploys the manifests to the gke-asm-2-r2-prod cluster
-  - name: "gcr.io/cloud-builders/kubectl"
+  - name: "gcr.io/${ops_project_id}/kustomize"
     id: Deploy-ops-asm-2
     args:
-      - "apply"
-      - "-R"
-      - "-f"
+      - "build"
       - "./gke-asm-2-r2-prod"
     env:
+      - "APPLY=true"
       - "CLOUDSDK_CORE_PROJECT=${ops_project_id}"
       - "CLOUDSDK_COMPUTE_REGION=${ops_gke_2_location}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${ops_gke_2_name}"
 
   # This step deploys the manifests to the gke-1-apps-r1a-prod cluster
-  - name: "gcr.io/cloud-builders/kubectl"
+  - name: "gcr.io/${ops_project_id}/kustomize"
     id: Deploy-gke-1-apps-r1a-prod
     args:
-      - "apply"
-      - "-R"
-      - "-f"
+      - "build"
       - "./gke-1-apps-r1a-prod"
     env:
+      - "APPLY=true"
       - "CLOUDSDK_CORE_PROJECT=${dev1_project_id}"
       - "CLOUDSDK_COMPUTE_REGION=${dev1_gke_1_location}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${dev1_gke_1_name}"
 
   # This step deploys the manifests to the gke-2-apps-r1b-prod cluster
-  - name: "gcr.io/cloud-builders/kubectl"
+  - name: "gcr.io/${ops_project_id}/kustomize"
     id: Deploy-gke-2-apps-r1b-prod
     args:
-      - "apply"
-      - "-R"
-      - "-f"
+      - "build"
       - "./gke-2-apps-r1b-prod"
     env:
+      - "APPLY=true"
       - "CLOUDSDK_CORE_PROJECT=${dev1_project_id}"
       - "CLOUDSDK_COMPUTE_REGION=${dev1_gke_2_location}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${dev1_gke_2_name}"
 
   # This step deploys the manifests to the gke-3-apps-r2a-prod cluster
-  - name: "gcr.io/cloud-builders/kubectl"
+  - name: "gcr.io/${ops_project_id}/kustomize"
     id: Deploy-gke-3-apps-r2a-prod
     args:
-      - "apply"
-      - "-R"
-      - "-f"
+      - "build"
       - "./gke-3-apps-r2a-prod"
     env:
+      - "APPLY=true"
       - "CLOUDSDK_CORE_PROJECT=${dev2_project_id}"
       - "CLOUDSDK_COMPUTE_REGION=${dev2_gke_3_location}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${dev2_gke_3_name}"
 
   # This step deploys the manifests to the gke-4-apps-r2b-prod cluster
-  - name: "gcr.io/cloud-builders/kubectl"
+  - name: "gcr.io/${ops_project_id}/kustomize"
     id: Deploy-gke-4-apps-r2b-prod
     args:
-      - "apply"
-      - "-R"
-      - "-f"
+      - "build"
       - "./gke-4-apps-r2b-prod"
     env:
+      - "APPLY=true"
       - "CLOUDSDK_CORE_PROJECT=${dev2_project_id}"
       - "CLOUDSDK_COMPUTE_REGION=${dev2_gke_4_location}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${dev2_gke_4_name}"

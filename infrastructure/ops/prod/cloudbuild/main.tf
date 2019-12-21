@@ -14,7 +14,7 @@ resource "google_cloudbuild_trigger" "k8s_trigger" {
   filename = "cloudbuild.yaml"
 }
 
-resource "template_file" "cloudbuild_yaml" {
+data "template_file" "cloudbuild_yaml" {
   template = file("config/cloudbuild.tpl.yaml")
   vars = {
     ops_project_id      = data.terraform_remote_state.ops_project.outputs.ops_project_id
@@ -39,10 +39,10 @@ resource "template_file" "cloudbuild_yaml" {
 resource "null_resource" "exec_push_cloudbuild_yaml_to_gcs" {
   provisioner "local-exec" {
     command = <<EOT
-    echo "${template_file.cloudbuild_yaml.rendered}" | gsutil cp - gs://${var.tfadmin_proj}/ops/k8s/cloudbuild.yaml
+    echo "${data.template_file.cloudbuild_yaml.rendered}" | gsutil cp - gs://${var.tfadmin_proj}/ops/k8s/cloudbuild.yaml
     EOT
   }
   triggers = {
-    data = template_file.cloudbuild_yaml.rendered
+    data = data.template_file.cloudbuild_yaml.rendered
   }
 }
