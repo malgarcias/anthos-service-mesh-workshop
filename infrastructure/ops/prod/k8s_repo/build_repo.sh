@@ -9,6 +9,10 @@ mkdir -p tmp/${dev2_gke_4_name?env not set}/istio-controlplane
 
 # Copy core resources to every cluster
 echo $(ls -d tmp/*/) | xargs -n 1 cp config/istio-system-namespace.yaml
+echo $(ls -d tmp/*/) | xargs -n 1 cp config/istio-system-psp.yaml
+echo $(ls -d tmp/*/) | xargs -n 1 cp config/istio-system-rbac.yaml
+echo $(ls -d tmp/*/) | xargs -n 1 cp config/istio-operator-psp.yaml
+echo $(ls -d tmp/*/) | xargs -n 1 cp config/jsonpatch-istio-operator-clusterrole.yaml
 echo $(ls -d tmp/*/) | xargs -n 1 cp config/kustomization.yaml
 echo $(ls -d tmp/*/istio-controlplane) | xargs -n 1 cp config/istio-controlplane/kustomization.yaml
 
@@ -90,15 +94,11 @@ for cluster in ${dev2_gke_3_name} ${dev2_gke_4_name}; do
   (cd $(dirname $DEST) && kustomize edit add resource $(basename $DEST))
 done
 
-# Add bases to all clusters
-for d in $(ls -d tmp/*/); do
-  (
-    cd $d
-    kustomize edit add resource istio-operator/
-    kustomize edit add resource istio-controlplane/
-  )
-done
+# Copy script used to setup multi-cluster service discovery
+cp -r config/kubeconfigs tmp/
+cp config/make_multi_cluster_config.sh tmp/
 
+# Copy repo files, overwrite existing files.
 rm -Rf k8s-repo
 git config --global user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 git config --global user.name "terraform"

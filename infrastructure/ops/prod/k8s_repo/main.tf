@@ -1,3 +1,10 @@
+# Archive used to detect changes in repo
+data "archive_file" "repo" {
+  type        = "zip"
+  source_dir  = "config/"
+  output_path = "data.zip"
+}
+
 resource "null_resource" "exec_create_k8s_repo" {
   provisioner "local-exec" {
     interpreter = ["bash", "-exc"]
@@ -23,6 +30,8 @@ resource "null_resource" "exec_create_k8s_repo" {
   }
 
   triggers = {
-    script_sha1 = sha1(file("build_repo.sh"))
+    script_sha1          = sha1(file("build_repo.sh"))
+    data_sha1            = data.archive_file.repo.output_sha
+    cloudbuild_yaml_sha1 = data.terraform_remote_state.cloudbuild.outputs.cloudbuild_yaml_sha1
   }
 }
