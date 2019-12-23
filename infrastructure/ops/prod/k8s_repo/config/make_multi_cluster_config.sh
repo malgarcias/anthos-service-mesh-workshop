@@ -102,22 +102,22 @@ function add_cluster_config() {
     (cd ${DEST_DIR} && kustomize edit add resource ${CONTEXT}-secret.yaml)
 }
 
+DEST_DIR="kubeconfigs"
+
+# Config for dev1-gke-1 cluster
+add_cluster_config ${DEV1_GKE_1} ${DEST_DIR}
+
+# Config for dev1-gke-2 cluster
+add_cluster_config ${DEV1_GKE_2} ${DEST_DIR}
+
+# Config for dev2-gke-1 cluster
+add_cluster_config ${DEV2_GKE_1} ${DEST_DIR}
+
+# Config for dev2-gke-2 cluster
+add_cluster_config ${DEV2_GKE_2} ${DEST_DIR}
+
 for cluster in ${OPS_GKE_1} ${OPS_GKE_2}; do
-    DEST_DIR="kubeconfigs"
-    
-    # Config for dev1-gke-1 cluster
-    add_cluster_config ${DEV1_GKE_1} ${DEST_DIR}
-
-    # Config for dev1-gke-2 cluster
-    add_cluster_config ${DEV1_GKE_2} ${DEST_DIR}
-    
-    # Config for dev2-gke-1 cluster
-    add_cluster_config ${DEV2_GKE_1} ${DEST_DIR}
-    
-    # Config for dev2-gke-2 cluster
-    add_cluster_config ${DEV2_GKE_2} ${DEST_DIR}
-
-    # Apply the kustomization to the ops cluster
-    kubectl config use-context ${cluster}
-    kubectl apply -k ${DEST_DIR}
+  # Apply the kustomization to the ops cluster
+  kubectl config use-context ${cluster}
+  kubectl apply -k ${DEST_DIR}
 done
