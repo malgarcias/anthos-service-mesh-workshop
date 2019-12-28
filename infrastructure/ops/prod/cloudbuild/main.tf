@@ -33,6 +33,7 @@ data "template_file" "cloudbuild_yaml" {
     dev2_gke_4_location = data.terraform_remote_state.app2_gke.outputs.dev2_gke_4_location
     dev2_gke_4_name     = data.terraform_remote_state.app2_gke.outputs.dev2_gke_4_name
     crd_path            = "istio-operator/crds/istio_v1alpha2_istiocontrolplane_crd.yaml"
+    k8s_repo_name       = var.k8s_repo_name
   }
 }
 

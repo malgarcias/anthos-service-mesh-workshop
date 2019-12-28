@@ -6,6 +6,8 @@ kind: Kustomization
 bases:
   - istio-operator/
   - istio-controlplane/
+  - app/
+  - app-ingress/
 
 resources:
   - istio-system-namespace.yaml

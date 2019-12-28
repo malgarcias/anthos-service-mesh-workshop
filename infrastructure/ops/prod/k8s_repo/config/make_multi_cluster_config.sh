@@ -102,7 +102,7 @@ function add_cluster_config() {
     (cd ${DEST_DIR} && kustomize edit add resource ${CONTEXT}-secret.yaml)
 }
 
-DEST_DIR="kubeconfigs"
+DEST_DIR=".kubeconfigs"
 
 # Config for dev1-gke-1 cluster
 add_cluster_config ${DEV1_GKE_1} ${DEST_DIR}
